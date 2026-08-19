@@ -141,6 +141,9 @@ func (h expeditionHandler) createObservation(w http.ResponseWriter, r *http.Requ
 		writeError(w, err)
 		return
 	}
+	// The insight is cached per expedition; drop the stale entry so the next
+	// view rebuilds it from the freshly stored observation.
+	h.insights.Invalidate(expeditionID)
 	writeJSON(w, http.StatusCreated, item)
 }
 
