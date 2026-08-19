@@ -19,7 +19,7 @@ func NewSpecimenService(repository store.Repository) *SpecimenService {
 }
 
 func (s *SpecimenService) Register(ctx context.Context, expeditionID, label, material string, weight float64, collectedAt time.Time, custodian, notes string) (model.Specimen, error) {
-	if err := model.ContextReady(ctx); err != nil {
+	if err := ctx.Err(); err != nil {
 		return model.Specimen{}, err
 	}
 	expedition, err := s.repository.GetExpedition(ctx, strings.TrimSpace(expeditionID))

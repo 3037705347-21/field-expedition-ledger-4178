@@ -19,7 +19,7 @@ func NewObservationService(repository store.Repository) *ObservationService {
 }
 
 func (s *ObservationService) Record(ctx context.Context, expeditionID, siteCode string, recordedAt time.Time, latitude, longitude, elevation float64, rockType, description string, tags []string, confidence float64) (model.Observation, error) {
-	if err := model.ContextReady(ctx); err != nil {
+	if err := ctx.Err(); err != nil {
 		return model.Observation{}, err
 	}
 	expedition, err := s.repository.GetExpedition(ctx, strings.TrimSpace(expeditionID))
