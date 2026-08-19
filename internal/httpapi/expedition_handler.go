@@ -80,8 +80,8 @@ func (h expeditionHandler) list(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case search != "":
 		items, err = h.query.Search(r.Context(), search)
-	case status == string(model.ExpeditionActive):
-		items, err = h.query.Active(r.Context())
+	case status != "":
+		items, err = h.query.ByStatus(r.Context(), status)
 	case region != "":
 		items, err = h.query.ByRegion(r.Context(), region)
 	default:

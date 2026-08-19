@@ -32,6 +32,10 @@ func (s *QueryService) Active(ctx context.Context) ([]model.Expedition, error) {
 	return s.repository.ListExpeditions(ctx, model.ExpeditionFilter{Status: string(model.ExpeditionActive)})
 }
 
+func (s *QueryService) ByStatus(ctx context.Context, status string) ([]model.Expedition, error) {
+	return s.repository.ListExpeditions(ctx, model.ExpeditionFilter{Status: policy.CanonicalStatus(status)})
+}
+
 func (s *QueryService) Search(ctx context.Context, query string) ([]model.Expedition, error) {
 	clean := strings.TrimSpace(query)
 	if clean == "" {

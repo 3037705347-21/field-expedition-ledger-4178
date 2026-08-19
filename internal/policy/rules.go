@@ -101,6 +101,10 @@ func StatusAllowed(value string, allowed ...string) bool {
 	return false
 }
 
+func CanonicalStatus(value string) string {
+	return strings.ToLower(strings.TrimSpace(value))
+}
+
 func TransitionAllowed(from, to string) bool {
 	switch from {
 	case "planned":
