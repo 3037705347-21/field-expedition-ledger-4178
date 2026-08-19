@@ -1,4 +1,4 @@
-# field-expedition-ledger-4178 Docker 交付说明
+# field-expedition-ledger__015 Docker 交付说明
 
 ## 项目概览
 - Field Expedition Ledger is a local Go service for keeping geological field work connected from expedition planning through observations and specimen custody.
@@ -20,8 +20,8 @@ go run ./cmd/ledger
 ## Docker 构建
 
 ```bash
-./build_benzhi_docker.sh field-expedition-ledger-4178-benzhi linux/amd64
-docker run --rm -it field-expedition-ledger-4178-benzhi bash
+./build_benzhi_docker.sh field-expedition-ledger__015-benzhi linux/amd64
+docker run --rm -it field-expedition-ledger__015-benzhi bash
 ```
 
 ## 环境
@@ -29,4 +29,4 @@ docker run --rm -it field-expedition-ledger-4178-benzhi bash
 - 基础镜像: `golang:1.26.5`
 - 依赖在镜像构建阶段预下载，容器内可直接执行 Go 构建和测试命令。
 - 代码目录: `/app`
-- 源码中检测到的服务端口: `8090`
+- 源码中检测到的服务端口: `20`, `8090`
