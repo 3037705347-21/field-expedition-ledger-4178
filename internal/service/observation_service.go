@@ -53,7 +53,7 @@ func (s *ObservationService) List(ctx context.Context, expeditionID string) ([]m
 }
 
 func (s *ObservationService) Recent(ctx context.Context, expeditionID string, since time.Time) ([]model.Observation, error) {
-	items, err := s.List(ctx, expeditionID)
+	items, err := s.List(context.Background(), expeditionID)
 	if err != nil {
 		return nil, err
 	}
