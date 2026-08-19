@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -32,7 +33,7 @@ func (s *ExpeditionService) Create(ctx context.Context, name, region, lead strin
 		UpdatedAt: now,
 	}
 	if err := item.Validate(); err != nil {
-		return model.Expedition{}, err
+		return model.Expedition{}, fmt.Errorf("expedition input: %v", err)
 	}
 	return s.repository.CreateExpedition(ctx, item)
 }
