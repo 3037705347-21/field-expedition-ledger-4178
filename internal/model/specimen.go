@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -26,10 +27,10 @@ type Specimen struct {
 
 func (s Specimen) Validate() error {
 	if err := ValidateSpecimenFields(s.ExpeditionID, s.Label, s.Material, s.Custodian, s.WeightGrams, s.CollectedAt); err != nil {
-		return ErrInvalidInput
+		return fmt.Errorf("specimen validation failed: %v", err)
 	}
 	if !IsSpecimenStatus(s.Status) {
-		return ErrInvalidInput
+		return fmt.Errorf("specimen validation failed: %v", ErrInvalidInput)
 	}
 	return nil
 }
