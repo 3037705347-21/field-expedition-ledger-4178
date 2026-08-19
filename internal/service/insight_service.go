@@ -33,13 +33,21 @@ type ExpeditionInsight struct {
 
 type InsightService struct {
 	repository store.Repository
+	cache      *InsightCache
 }
 
 func NewInsightService(repository store.Repository) *InsightService {
-	return &InsightService{repository: repository}
+	return &InsightService{repository: repository, cache: NewInsightCache()}
+}
+
+func (s *InsightService) Invalidate(expeditionID string) {
+	s.cache.Invalidate(expeditionID)
 }
 
 func (s *InsightService) Build(ctx context.Context, expeditionID string) (ExpeditionInsight, error) {
+	if cached, ok := s.cache.Get(expeditionID); ok {
+		return cached, nil
+	}
 	if _, err := s.repository.GetExpedition(ctx, expeditionID); err != nil {
 		return ExpeditionInsight{}, err
 	}
@@ -62,7 +70,7 @@ func (s *InsightService) Build(ctx context.Context, expeditionID string) (Expedi
 	}
 	warnings := analysis.ReviewWarnings(observations, specimens)
 	score := analysis.QualityScore(observations, specimens)
-	return ExpeditionInsight{
+	insight := ExpeditionInsight{
 		ExpeditionID:        expeditionID,
 		ObservationDateList: sortedDays(observations),
 		SiteCoverage:        analysis.SiteCoverage(observations),
@@ -80,7 +88,9 @@ func (s *InsightService) Build(ctx context.Context, expeditionID string) (Expedi
 		WindowHasData:       WindowContains(observations, first, last),
 		MatchedMaterials:    len(MatchMaterial(specimens, materials)),
 		MatchedTags:         len(MatchTag(observations, tag)),
-	}, nil
+	}
+	s.cache.Put(expeditionID, insight)
+	return insight, nil
 }
 
 func sortedDays(items []model.Observation) []string {
