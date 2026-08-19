@@ -1,10 +1,26 @@
 package model
 
 import (
+	"strings"
 	"time"
 
 	"example.com/field-expedition-ledger/internal/policy"
 )
+
+func ExpeditionBefore(left, right Expedition) bool {
+	if !left.CreatedAt.Equal(right.CreatedAt) {
+		return left.CreatedAt.Before(right.CreatedAt)
+	}
+	if !left.StartDate.Equal(right.StartDate) {
+		return left.StartDate.Before(right.StartDate)
+	}
+	leftName := strings.ToLower(strings.TrimSpace(left.Name))
+	rightName := strings.ToLower(strings.TrimSpace(right.Name))
+	if leftName != rightName {
+		return leftName < rightName
+	}
+	return policy.ExpeditionTieBreak(left.ID, right.ID)
+}
 
 type ExpeditionStatus string
 

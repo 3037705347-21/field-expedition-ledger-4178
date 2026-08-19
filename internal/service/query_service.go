@@ -19,6 +19,14 @@ func NewQueryService(repository store.Repository) *QueryService {
 	return &QueryService{repository: repository}
 }
 
+func StableExpeditionOrder(items []model.Expedition) []model.Expedition {
+	result := append([]model.Expedition(nil), items...)
+	sort.SliceStable(result, func(i, j int) bool {
+		return model.ExpeditionBefore(result[i], result[j])
+	})
+	return result
+}
+
 func (s *QueryService) Page(ctx context.Context, filter model.ExpeditionFilter, offset, limit int) (model.Page[model.Expedition], error) {
 	items, err := s.repository.ListExpeditions(ctx, filter)
 	if err != nil {

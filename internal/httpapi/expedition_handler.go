@@ -103,6 +103,7 @@ func (h expeditionHandler) list(w http.ResponseWriter, r *http.Request) {
 	if queryValue(r, "notes") == "true" {
 		items = service.FilterWithNotes(items)
 	}
+	items = service.StableExpeditionOrder(items)
 	writeJSON(w, http.StatusOK, map[string]any{
 		"items":   items,
 		"total":   len(items),

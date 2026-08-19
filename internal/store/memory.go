@@ -78,10 +78,7 @@ func (r *MemoryRepository) ListExpeditions(ctx context.Context, filter model.Exp
 	}
 	r.mu.RUnlock()
 	sort.Slice(items, func(i, j int) bool {
-		if items[i].CreatedAt.Equal(items[j].CreatedAt) {
-			return items[i].ID > items[j].ID
-		}
-		return items[i].CreatedAt.Before(items[j].CreatedAt)
+		return model.ExpeditionBefore(items[i], items[j])
 	})
 	return items, nil
 }

@@ -23,7 +23,6 @@ func TestExpeditionListUsesStableIDTieBreakForEqualCreationTimes(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-
 	request := httptest.NewRequest(http.MethodGet, "/api/expeditions", nil)
 	recorder := httptest.NewRecorder()
 	NewHandler(repository).ServeHTTP(recorder, request)
