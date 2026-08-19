@@ -24,7 +24,7 @@ type Observation struct {
 
 func (o Observation) Validate() error {
 	if err := ValidateObservationFields(o.ExpeditionID, o.SiteCode, o.RockType, o.Description, o.RecordedAt, o.Latitude, o.Longitude, o.ElevationM, o.Confidence); err != nil {
-		return fmt.Errorf("observation validation failed: %v", err)
+		return fmt.Errorf("observation validation failed: %w", err)
 	}
 	return nil
 }

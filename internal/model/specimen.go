@@ -27,10 +27,10 @@ type Specimen struct {
 
 func (s Specimen) Validate() error {
 	if err := ValidateSpecimenFields(s.ExpeditionID, s.Label, s.Material, s.Custodian, s.WeightGrams, s.CollectedAt); err != nil {
-		return fmt.Errorf("specimen validation failed: %v", err)
+		return fmt.Errorf("specimen validation failed: %w", err)
 	}
 	if !IsSpecimenStatus(s.Status) {
-		return fmt.Errorf("specimen validation failed: %v", ErrInvalidInput)
+		return fmt.Errorf("specimen validation failed: %w", ErrInvalidInput)
 	}
 	return nil
 }

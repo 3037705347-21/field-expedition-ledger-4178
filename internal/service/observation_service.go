@@ -41,7 +41,7 @@ func (s *ObservationService) Record(ctx context.Context, expeditionID, siteCode 
 		Confidence:   confidence,
 	}.Normalized()
 	if err := item.Validate(); err != nil {
-		return model.Observation{}, fmt.Errorf("record observation: %v", err)
+		return model.Observation{}, fmt.Errorf("record observation: %w", err)
 	}
 	return s.repository.CreateObservation(ctx, item)
 }
