@@ -22,6 +22,7 @@ func writeJSON(w http.ResponseWriter, status int, value any) {
 func writeError(w http.ResponseWriter, err error) {
 	status := http.StatusBadRequest
 	code := "invalid_request"
+	message := err.Error()
 	switch {
 	case errors.Is(err, model.ErrNotFound):
 		status = http.StatusNotFound
@@ -29,6 +30,10 @@ func writeError(w http.ResponseWriter, err error) {
 	case errors.Is(err, model.ErrInvalidState), errors.Is(err, model.ErrClosedExpedition):
 		status = http.StatusConflict
 		code = "invalid_state"
+	case errors.Is(err, model.ErrInvalidFilter):
+		status = http.StatusBadRequest
+		code = "invalid_filter"
+		message = "invalid filter: provide a valid RFC3339 date"
 	case errors.Is(err, model.ErrInvalidInput):
 		status = http.StatusBadRequest
 		code = "invalid_input"
@@ -36,5 +41,5 @@ func writeError(w http.ResponseWriter, err error) {
 		status = http.StatusInternalServerError
 		code = "internal_error"
 	}
-	writeJSON(w, status, errorPayload{Code: code, Message: err.Error()})
+	writeJSON(w, status, errorPayload{Code: code, Message: message})
 }
