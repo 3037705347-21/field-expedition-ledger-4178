@@ -8,6 +8,7 @@ import (
 
 	"example.com/field-expedition-ledger/internal/analysis"
 	"example.com/field-expedition-ledger/internal/model"
+	"example.com/field-expedition-ledger/internal/policy"
 	"example.com/field-expedition-ledger/internal/store"
 )
 
@@ -193,11 +194,7 @@ func SortedSiteCounts(items []model.Observation) []string {
 	for site, count := range coverage {
 		result = append(result, site+"="+formatCount(count))
 	}
-	sort.Slice(result, func(i, j int) bool {
-		left, right := result[i], result[j]
-		return left < right
-	})
-	return result
+	return policy.SortCountLabelsDescending(result)
 }
 
 func WindowContains(items []model.Observation, start, end time.Time) bool {

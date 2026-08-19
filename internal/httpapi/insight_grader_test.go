@@ -28,10 +28,10 @@ func TestInsightsSortSiteCountsNumerically(t *testing.T) {
 	}
 
 	for i := 0; i < 10; i++ {
-		postObservation(t, handler, expedition.ID, "Ridge", time.Date(2026, 8, 18, i, 0, 0, 0, time.UTC))
+		postInsightObservation(t, handler, expedition.ID, "Ridge", time.Date(2026, 8, 18, i, 0, 0, 0, time.UTC))
 	}
 	for i := 0; i < 2; i++ {
-		postObservation(t, handler, expedition.ID, "Basin", time.Date(2026, 8, 19, i, 0, 0, 0, time.UTC))
+		postInsightObservation(t, handler, expedition.ID, "Basin", time.Date(2026, 8, 19, i, 0, 0, 0, time.UTC))
 	}
 
 	response := httptest.NewRecorder()
@@ -51,7 +51,7 @@ func TestInsightsSortSiteCountsNumerically(t *testing.T) {
 	}
 }
 
-func postObservation(t *testing.T, handler http.Handler, expeditionID, site string, recordedAt time.Time) {
+func postInsightObservation(t *testing.T, handler http.Handler, expeditionID, site string, recordedAt time.Time) {
 	t.Helper()
 	body := `{"site_code":"` + site + `","recorded_at":"` + recordedAt.Format(time.RFC3339) + `","latitude":1,"longitude":2,"elevation_m":100,"rock_type":"granite","description":"outcrop","confidence":0.8}`
 	request := httptest.NewRequest(http.MethodPost, "/api/expeditions/"+expeditionID+"/observations", strings.NewReader(body))
