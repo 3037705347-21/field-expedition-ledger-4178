@@ -14,7 +14,7 @@ type ExpeditionFilter struct {
 func ParseBeforeFilter(value string) (time.Time, error) {
 	moment, err := time.Parse(time.RFC3339, strings.TrimSpace(value))
 	if err != nil {
-		return time.Time{}, ErrInvalidInput
+		return time.Time{}, ErrInvalidFilter
 	}
 	return moment, nil
 }
