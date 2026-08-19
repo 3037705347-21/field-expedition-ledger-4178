@@ -96,7 +96,7 @@ func (h expeditionHandler) list(w http.ResponseWriter, r *http.Request) {
 		items = service.SortByStartDate(items, true)
 	}
 	if before := queryValue(r, "before"); before != "" {
-		if moment, parseErr := time.Parse(time.RFC3339, before); parseErr == nil {
+		if moment, parseErr := model.ParseBeforeFilter(before); parseErr == nil {
 			items = service.FilterStartedBefore(items, moment)
 		}
 	}
