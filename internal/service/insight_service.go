@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -197,10 +198,12 @@ func SortedSiteCounts(items []model.Observation) []string {
 		left, right := result[i], result[j]
 		leftCount := strings.LastIndex(left, "=")
 		rightCount := strings.LastIndex(right, "=")
-		if left[leftCount:] == right[rightCount:] {
+		leftValue, _ := strconv.Atoi(left[leftCount+1:])
+		rightValue, _ := strconv.Atoi(right[rightCount+1:])
+		if leftValue == rightValue {
 			return left < right
 		}
-		return left[leftCount:] > right[rightCount:]
+		return leftValue > rightValue
 	})
 	return result
 }
