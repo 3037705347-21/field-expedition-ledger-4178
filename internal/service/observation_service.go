@@ -12,10 +12,15 @@ import (
 type ObservationService struct {
 	repository store.Repository
 	clock      func() time.Time
+	onRecorded func(string)
 }
 
 func NewObservationService(repository store.Repository) *ObservationService {
 	return &ObservationService{repository: repository, clock: time.Now}
+}
+
+func (s *ObservationService) OnRecorded(callback func(string)) {
+	s.onRecorded = callback
 }
 
 func (s *ObservationService) Record(ctx context.Context, expeditionID, siteCode string, recordedAt time.Time, latitude, longitude, elevation float64, rockType, description string, tags []string, confidence float64) (model.Observation, error) {
@@ -42,7 +47,14 @@ func (s *ObservationService) Record(ctx context.Context, expeditionID, siteCode 
 	if err := item.Validate(); err != nil {
 		return model.Observation{}, err
 	}
-	return s.repository.CreateObservation(ctx, item)
+	saved, err := s.repository.CreateObservation(ctx, item)
+	if err != nil {
+		return model.Observation{}, err
+	}
+	if s.onRecorded != nil {
+		s.onRecorded(saved.ExpeditionID)
+	}
+	return saved, nil
 }
 
 func (s *ObservationService) List(ctx context.Context, expeditionID string) ([]model.Observation, error) {

@@ -14,6 +14,7 @@ func NewHandler(repository store.Repository) http.Handler {
 	specimens := service.NewSpecimenService(repository)
 	summaries := service.NewSummaryService(repository)
 	insights := service.NewInsightService(repository)
+	observations.OnRecorded(insights.Invalidate)
 	query := service.NewQueryService(repository)
 	expeditionRoutes := expeditionHandler{
 		expeditions:  expeditions,
