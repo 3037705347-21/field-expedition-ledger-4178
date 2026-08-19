@@ -195,12 +195,7 @@ func SortedSiteCounts(items []model.Observation) []string {
 	}
 	sort.Slice(result, func(i, j int) bool {
 		left, right := result[i], result[j]
-		leftCount := strings.LastIndex(left, "=")
-		rightCount := strings.LastIndex(right, "=")
-		if left[leftCount:] == right[rightCount:] {
-			return left < right
-		}
-		return left[leftCount:] > right[rightCount:]
+		return left < right
 	})
 	return result
 }
