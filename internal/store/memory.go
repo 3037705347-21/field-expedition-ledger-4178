@@ -24,7 +24,7 @@ func NewMemoryRepository() *MemoryRepository {
 }
 
 func (r *MemoryRepository) CreateExpedition(ctx context.Context, expedition model.Expedition) (model.Expedition, error) {
-	if err := ctx.Err(); err != nil {
+	if err := model.ContextReady(ctx); err != nil {
 		return model.Expedition{}, err
 	}
 	if err := expedition.Validate(); err != nil {
@@ -37,7 +37,7 @@ func (r *MemoryRepository) CreateExpedition(ctx context.Context, expedition mode
 }
 
 func (r *MemoryRepository) GetExpedition(ctx context.Context, id string) (model.Expedition, error) {
-	if err := ctx.Err(); err != nil {
+	if err := model.ContextReady(ctx); err != nil {
 		return model.Expedition{}, err
 	}
 	r.mu.RLock()
@@ -50,7 +50,7 @@ func (r *MemoryRepository) GetExpedition(ctx context.Context, id string) (model.
 }
 
 func (r *MemoryRepository) UpdateExpedition(ctx context.Context, expedition model.Expedition) (model.Expedition, error) {
-	if err := ctx.Err(); err != nil {
+	if err := model.ContextReady(ctx); err != nil {
 		return model.Expedition{}, err
 	}
 	if err := expedition.Validate(); err != nil {
@@ -66,7 +66,7 @@ func (r *MemoryRepository) UpdateExpedition(ctx context.Context, expedition mode
 }
 
 func (r *MemoryRepository) ListExpeditions(ctx context.Context, filter model.ExpeditionFilter) ([]model.Expedition, error) {
-	if err := ctx.Err(); err != nil {
+	if err := model.ContextReady(ctx); err != nil {
 		return nil, err
 	}
 	r.mu.RLock()
@@ -84,7 +84,7 @@ func (r *MemoryRepository) ListExpeditions(ctx context.Context, filter model.Exp
 }
 
 func (r *MemoryRepository) CreateObservation(ctx context.Context, observation model.Observation) (model.Observation, error) {
-	if err := ctx.Err(); err != nil {
+	if err := model.ContextReady(ctx); err != nil {
 		return model.Observation{}, err
 	}
 	if err := observation.Validate(); err != nil {
@@ -100,7 +100,7 @@ func (r *MemoryRepository) CreateObservation(ctx context.Context, observation mo
 }
 
 func (r *MemoryRepository) ListObservations(ctx context.Context, expeditionID string) ([]model.Observation, error) {
-	if err := ctx.Err(); err != nil {
+	if err := model.ContextReady(ctx); err != nil {
 		return nil, err
 	}
 	r.mu.RLock()
@@ -118,7 +118,7 @@ func (r *MemoryRepository) ListObservations(ctx context.Context, expeditionID st
 }
 
 func (r *MemoryRepository) CreateSpecimen(ctx context.Context, specimen model.Specimen) (model.Specimen, error) {
-	if err := ctx.Err(); err != nil {
+	if err := model.ContextReady(ctx); err != nil {
 		return model.Specimen{}, err
 	}
 	if err := specimen.Validate(); err != nil {
@@ -134,7 +134,7 @@ func (r *MemoryRepository) CreateSpecimen(ctx context.Context, specimen model.Sp
 }
 
 func (r *MemoryRepository) GetSpecimen(ctx context.Context, id string) (model.Specimen, error) {
-	if err := ctx.Err(); err != nil {
+	if err := model.ContextReady(ctx); err != nil {
 		return model.Specimen{}, err
 	}
 	r.mu.RLock()
@@ -147,7 +147,7 @@ func (r *MemoryRepository) GetSpecimen(ctx context.Context, id string) (model.Sp
 }
 
 func (r *MemoryRepository) ListSpecimens(ctx context.Context, expeditionID string) ([]model.Specimen, error) {
-	if err := ctx.Err(); err != nil {
+	if err := model.ContextReady(ctx); err != nil {
 		return nil, err
 	}
 	r.mu.RLock()
