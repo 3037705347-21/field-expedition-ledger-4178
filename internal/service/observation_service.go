@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"time"
 
@@ -41,7 +40,7 @@ func (s *ObservationService) Record(ctx context.Context, expeditionID, siteCode 
 		Confidence:   confidence,
 	}.Normalized()
 	if err := item.Validate(); err != nil {
-		return model.Observation{}, fmt.Errorf("record observation: %v", err)
+		return model.Observation{}, err
 	}
 	return s.repository.CreateObservation(ctx, item)
 }
