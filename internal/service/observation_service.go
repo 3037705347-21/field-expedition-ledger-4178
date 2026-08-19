@@ -59,7 +59,7 @@ func (s *ObservationService) Recent(ctx context.Context, expeditionID string, si
 	}
 	filtered := make([]model.Observation, 0, len(items))
 	for _, item := range items {
-		if model.RecordedOnOrAfter(item.RecordedAt, since) {
+		if model.RecordedAfterCursor(item.RecordedAt, since) {
 			filtered = append(filtered, item)
 		}
 	}

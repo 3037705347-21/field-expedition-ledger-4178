@@ -3,7 +3,10 @@ package httpapi
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	"time"
+
+	"example.com/field-expedition-ledger/internal/model"
 )
 
 type createExpeditionRequest struct {
@@ -43,4 +46,16 @@ func decodeJSON(r *http.Request, destination any) error {
 
 func queryValue(r *http.Request, key string) string {
 	return r.URL.Query().Get(key)
+}
+
+func observationCursor(r *http.Request) (time.Time, bool, error) {
+	raw := strings.TrimSpace(queryValue(r, "since"))
+	if raw == "" {
+		return time.Time{}, false, nil
+	}
+	moment, err := time.Parse(time.RFC3339, raw)
+	if err != nil {
+		return time.Time{}, true, model.ErrInvalidInput
+	}
+	return model.NormalizeTime(moment), true, nil
 }

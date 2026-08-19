@@ -149,12 +149,12 @@ func (h expeditionHandler) listObservations(w http.ResponseWriter, r *http.Reque
 		items []model.Observation
 		err   error
 	)
-	if since := queryValue(r, "since"); since != "" {
-		moment, parseErr := time.Parse(time.RFC3339, since)
-		if parseErr != nil {
-			writeError(w, model.ErrInvalidInput)
-			return
-		}
+	moment, hasCursor, cursorErr := observationCursor(r)
+	if cursorErr != nil {
+		writeError(w, cursorErr)
+		return
+	}
+	if hasCursor {
 		items, err = h.observations.Recent(r.Context(), expeditionID, moment)
 	} else {
 		items, err = h.observations.List(r.Context(), expeditionID)
