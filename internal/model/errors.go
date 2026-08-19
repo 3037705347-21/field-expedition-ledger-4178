@@ -8,7 +8,3 @@ var (
 	ErrInvalidState     = errors.New("invalid state")
 	ErrClosedExpedition = errors.New("expedition is closed")
 )
-
-func IsInputError(err error) bool {
-	return err == ErrInvalidInput
-}
