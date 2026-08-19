@@ -23,8 +23,10 @@ func (s *SpecimenService) Register(ctx context.Context, expeditionID, label, mat
 	if err != nil {
 		return model.Specimen{}, err
 	}
-	if expedition.Status == model.ExpeditionClosed {
-		return model.Specimen{}, model.ErrClosedExpedition
+	// Specimens may only be registered against an active expedition: planned
+	// expeditions have not begun field work and closed expeditions are archived.
+	if expedition.Status != model.ExpeditionActive {
+		return model.Specimen{}, model.ErrInvalidState
 	}
 	item := model.Specimen{
 		ID:           model.NewID("spc"),

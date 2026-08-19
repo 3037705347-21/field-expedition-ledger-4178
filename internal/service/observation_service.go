@@ -23,8 +23,10 @@ func (s *ObservationService) Record(ctx context.Context, expeditionID, siteCode 
 	if err != nil {
 		return model.Observation{}, err
 	}
-	if expedition.Status == model.ExpeditionClosed {
-		return model.Observation{}, model.ErrClosedExpedition
+	// Observations may only be recorded against an active expedition: planned
+	// expeditions have not begun field work and closed expeditions are archived.
+	if expedition.Status != model.ExpeditionActive {
+		return model.Observation{}, model.ErrInvalidState
 	}
 	item := model.Observation{
 		ID:           model.NewID("obs"),
