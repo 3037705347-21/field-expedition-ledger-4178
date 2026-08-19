@@ -7,4 +7,5 @@ var (
 	ErrNotFound         = errors.New("not found")
 	ErrInvalidState     = errors.New("invalid state")
 	ErrClosedExpedition = errors.New("expedition is closed")
+	ErrDuplicateSpecimenLabel = errors.New("specimen label already exists")
 )

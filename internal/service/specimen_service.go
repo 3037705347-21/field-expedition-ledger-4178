@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"example.com/field-expedition-ledger/internal/model"
+	"example.com/field-expedition-ledger/internal/policy"
 	"example.com/field-expedition-ledger/internal/store"
 )
 
@@ -25,6 +26,15 @@ func (s *SpecimenService) Register(ctx context.Context, expeditionID, label, mat
 	}
 	if expedition.Status == model.ExpeditionClosed {
 		return model.Specimen{}, model.ErrClosedExpedition
+	}
+	existing, err := s.repository.ListSpecimens(ctx, strings.TrimSpace(expeditionID))
+	if err != nil {
+		return model.Specimen{}, err
+	}
+	for _, item := range existing {
+		if policy.SameLabel(item.Label, label) {
+			return model.Specimen{}, model.ErrDuplicateSpecimenLabel
+		}
 	}
 	item := model.Specimen{
 		ID:           model.NewID("spc"),

@@ -41,6 +41,10 @@ func Clean(value string) string {
 	return strings.Join(strings.Fields(strings.TrimSpace(value)), " ")
 }
 
+func SameLabel(left, right string) bool {
+	return strings.EqualFold(Clean(left), Clean(right))
+}
+
 func CleanList(values []string) []string {
 	result := make([]string, 0, len(values))
 	seen := make(map[string]struct{})

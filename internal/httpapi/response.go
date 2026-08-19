@@ -32,6 +32,9 @@ func writeError(w http.ResponseWriter, err error) {
 	case errors.Is(err, model.ErrInvalidInput):
 		status = http.StatusBadRequest
 		code = "invalid_input"
+	case errors.Is(err, model.ErrDuplicateSpecimenLabel):
+		status = http.StatusConflict
+		code = "duplicate_specimen_label"
 	default:
 		status = http.StatusInternalServerError
 		code = "internal_error"
