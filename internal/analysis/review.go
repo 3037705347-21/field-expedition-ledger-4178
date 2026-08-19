@@ -29,10 +29,7 @@ type Review struct {
 }
 
 func BuildReview(observations []model.Observation, specimens []model.Specimen) Review {
-	review := Review{ObservedMaterials: []string{}, ActiveCustodians: []string{}, FollowUp: "collect more observations"}
-	if len(observations) == 0 && len(specimens) == 0 {
-		return review
-	}
+	review := Review{ObservedMaterials: []string{}, ActiveCustodians: []string{}}
 	review.SiteCount = len(SiteCoverage(observations))
 	review.QualityScore = QualityScore(observations, specimens)
 	review.FollowUp = FollowUpAction(review.SiteCount, len(observations), len(specimens), review.QualityScore)

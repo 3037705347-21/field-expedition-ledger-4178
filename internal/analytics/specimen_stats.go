@@ -18,13 +18,17 @@ type SpecimenStats struct {
 	WeightBands     map[string]int `json:"weight_bands"`
 }
 
-func SummarizeSpecimens(items []model.Specimen) SpecimenStats {
-	result := SpecimenStats{
+func EmptySpecimenStats() SpecimenStats {
+	return SpecimenStats{
 		Materials:    []string{},
 		StatusCounts: map[string]int{},
 		Custodians:   []string{},
 		WeightBands:  map[string]int{},
 	}
+}
+
+func SummarizeSpecimens(items []model.Specimen) SpecimenStats {
+	result := EmptySpecimenStats()
 	if len(items) == 0 {
 		return result
 	}

@@ -31,21 +31,12 @@ func (s *SummaryService) Build(ctx context.Context, expeditionID string) (model.
 	if err != nil {
 		return model.ExpeditionSummary{}, err
 	}
-	summary := model.ExpeditionSummary{
-		ExpeditionID:      expedition.ID,
-		ExpeditionName:    expedition.Name,
-		Status:            string(expedition.Status),
-		ObservationCount:  len(observations),
-		SpecimenCount:     len(specimens),
-		MinimumElevationM: 0,
-		MaximumElevationM: 0,
-		AverageConfidence: 0,
-		RockTypes:         []string{},
-		SpecimenMaterials: []string{},
-		MaterialWeights:   map[string]float64{},
-		SpecimenStatuses:  []string{},
-		StatusCounts:      map[string]int{},
-	}
+	summary := model.NewEmptyExpeditionSummary(expedition)
+	summary.ObservationCount = len(observations)
+	summary.SpecimenCount = len(specimens)
+	summary.MinimumElevationM = 0
+	summary.MaximumElevationM = 0
+	summary.AverageConfidence = 0
 	expeditionStats := analytics.SummarizeExpeditions([]model.Expedition{expedition})
 	for _, status := range analytics.StatusNames() {
 		summary.StatusCounts[status] = expeditionStats.CountByStatus[status]
@@ -57,9 +48,6 @@ func (s *SummaryService) Build(ctx context.Context, expeditionID string) (model.
 	summary.SpecimenMaterials = specimenStats.Materials
 	summary.MaterialWeights = analytics.WeightByMaterial(specimens)
 	summary.SpecimenStatuses = analytics.StatusBreakdown(specimens)
-	if len(observations) == 0 {
-		return summary, nil
-	}
 	derived := analytics.SummarizeObservations(observations)
 	minimum, maximum, hasRange := analytics.ElevationRange(observations)
 	if hasRange {
