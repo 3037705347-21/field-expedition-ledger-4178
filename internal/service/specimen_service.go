@@ -26,6 +26,9 @@ func (s *SpecimenService) Register(ctx context.Context, expeditionID, label, mat
 	if expedition.Status == model.ExpeditionClosed {
 		return model.Specimen{}, model.ErrClosedExpedition
 	}
+	if !expedition.CanRecord() {
+		return model.Specimen{}, model.ErrInactiveExpedition
+	}
 	item := model.Specimen{
 		ID:           model.NewID("spc"),
 		ExpeditionID: strings.TrimSpace(expeditionID),

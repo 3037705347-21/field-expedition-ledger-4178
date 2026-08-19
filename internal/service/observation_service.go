@@ -26,6 +26,9 @@ func (s *ObservationService) Record(ctx context.Context, expeditionID, siteCode 
 	if expedition.Status == model.ExpeditionClosed {
 		return model.Observation{}, model.ErrClosedExpedition
 	}
+	if !expedition.CanRecord() {
+		return model.Observation{}, model.ErrInactiveExpedition
+	}
 	item := model.Observation{
 		ID:           model.NewID("obs"),
 		ExpeditionID: strings.TrimSpace(expeditionID),
