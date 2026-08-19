@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"example.com/field-expedition-ledger/internal/model"
+	"example.com/field-expedition-ledger/internal/policy"
 )
 
 type ObservationStats struct {
@@ -52,7 +53,7 @@ func SummarizeObservations(items []model.Observation) ObservationStats {
 		if site != "" {
 			seenSites[site] = struct{}{}
 		}
-		for _, tag := range item.Tags {
+		for _, tag := range policy.CloneStrings(item.Tags) {
 			cleanTag := strings.ToLower(strings.TrimSpace(tag))
 			if cleanTag != "" {
 				stats.TagCounts[cleanTag]++

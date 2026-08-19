@@ -230,7 +230,7 @@ func HasCoordinateDrift(items []model.Observation, threshold float64) bool {
 func TagSet(items []model.Observation) []string {
 	set := make(map[string]struct{})
 	for _, item := range items {
-		for _, tag := range item.Tags {
+		for _, tag := range policy.CloneStrings(item.Tags) {
 			if value := strings.ToLower(strings.TrimSpace(tag)); value != "" {
 				set[value] = struct{}{}
 			}

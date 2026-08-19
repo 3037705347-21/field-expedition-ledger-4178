@@ -32,7 +32,7 @@ func (o Observation) Normalized() Observation {
 	o.SiteCode = strings.ToUpper(NormalizeName(o.SiteCode))
 	o.RockType = NormalizeName(o.RockType)
 	o.Description = NormalizeName(o.Description)
-	o.Tags = policy.CleanList(o.Tags)
+	o.Tags = policy.CleanList(policy.CloneStrings(o.Tags))
 	o.RecordedAt = o.RecordedAt.UTC()
 	return o
 }
