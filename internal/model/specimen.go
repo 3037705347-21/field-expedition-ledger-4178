@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strings"
 	"time"
 )
 
@@ -22,6 +23,10 @@ type Specimen struct {
 	Custodian    string         `json:"custodian"`
 	Status       SpecimenStatus `json:"status"`
 	Notes        string         `json:"notes,omitempty"`
+}
+
+func (s Specimen) MaterialKey() string {
+	return strings.ToLower(strings.Join(strings.Fields(strings.TrimSpace(s.Material)), " "))
 }
 
 func (s Specimen) Validate() error {

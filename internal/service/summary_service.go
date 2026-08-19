@@ -18,6 +18,10 @@ func NewSummaryService(repository store.Repository) *SummaryService {
 	return &SummaryService{repository: repository}
 }
 
+func summaryMaterialWeights(items []model.Specimen) map[string]float64 {
+	return analytics.WeightByMaterial(items)
+}
+
 func (s *SummaryService) Build(ctx context.Context, expeditionID string) (model.ExpeditionSummary, error) {
 	expedition, err := s.repository.GetExpedition(ctx, expeditionID)
 	if err != nil {
@@ -55,7 +59,7 @@ func (s *SummaryService) Build(ctx context.Context, expeditionID string) (model.
 	summary.SiteGroupCount = len(analytics.GroupBySite(observations))
 	specimenStats := analytics.SummarizeSpecimens(specimens)
 	summary.SpecimenMaterials = specimenStats.Materials
-	summary.MaterialWeights = analytics.WeightByMaterial(specimens)
+	summary.MaterialWeights = summaryMaterialWeights(specimens)
 	summary.SpecimenStatuses = analytics.StatusBreakdown(specimens)
 	if len(observations) == 0 {
 		return summary, nil

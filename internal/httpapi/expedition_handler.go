@@ -195,6 +195,10 @@ func (h expeditionHandler) summary(w http.ResponseWriter, r *http.Request, id st
 		writeError(w, err)
 		return
 	}
+	writeSummary(w, item)
+}
+
+func writeSummary(w http.ResponseWriter, item model.ExpeditionSummary) {
 	writeJSON(w, http.StatusOK, item)
 }
 

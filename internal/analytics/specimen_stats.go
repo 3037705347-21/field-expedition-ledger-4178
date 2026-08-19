@@ -35,7 +35,7 @@ func SummarizeSpecimens(items []model.Specimen) SpecimenStats {
 		result.TotalWeightGram += item.WeightGrams
 		result.StatusCounts[string(item.Status)]++
 		result.WeightBands[policy.WeightBand(item.WeightGrams)]++
-		material := strings.ToLower(strings.TrimSpace(item.Material))
+		material := item.MaterialKey()
 		if material != "" {
 			materials[material] = struct{}{}
 		}
@@ -59,8 +59,8 @@ func SummarizeSpecimens(items []model.Specimen) SpecimenStats {
 func WeightByMaterial(items []model.Specimen) map[string]float64 {
 	result := make(map[string]float64)
 	for _, item := range items {
-		key := strings.ToLower(strings.TrimSpace(item.Material))
-		result[key] = item.WeightGrams
+		key := item.MaterialKey()
+		result[key] += item.WeightGrams
 	}
 	return result
 }

@@ -36,7 +36,6 @@ func TestSummaryAccumulatesWeightsForRepeatedMaterial(t *testing.T) {
 			t.Fatalf("create status=%d body=%s", recorder.Code, recorder.Body.String())
 		}
 	}
-
 	request := httptest.NewRequest(http.MethodGet, "/api/expeditions/"+expedition.ID+"/summary", nil)
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder, request)
