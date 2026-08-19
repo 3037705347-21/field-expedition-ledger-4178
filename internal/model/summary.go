@@ -21,3 +21,7 @@ type ExpeditionSummary struct {
 	ActiveCount       int                `json:"active_count"`
 	ElevationRange    string             `json:"elevation_range"`
 }
+
+func (s ExpeditionSummary) NormalizeCollections() ExpeditionSummary {
+	return s
+}

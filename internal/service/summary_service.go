@@ -46,6 +46,7 @@ func (s *SummaryService) Build(ctx context.Context, expeditionID string) (model.
 		SpecimenStatuses:  []string{},
 		StatusCounts:      map[string]int{},
 	}
+	summary = summary.NormalizeCollections()
 	expeditionStats := analytics.SummarizeExpeditions([]model.Expedition{expedition})
 	for _, status := range analytics.StatusNames() {
 		summary.StatusCounts[status] = expeditionStats.CountByStatus[status]

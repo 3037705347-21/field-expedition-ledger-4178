@@ -26,7 +26,7 @@ func SummarizeSpecimens(items []model.Specimen) SpecimenStats {
 		WeightBands:  map[string]int{},
 	}
 	if len(items) == 0 {
-		return result
+		return SpecimenStats{}
 	}
 	materials := make(map[string]struct{})
 	custodians := make(map[string]struct{})
