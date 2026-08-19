@@ -279,3 +279,8 @@ func ReviewWarnings(observations []model.Observation, specimens []model.Specimen
 	}
 	return warnings
 }
+func (r Review) ApplyToSummary(summary *model.ExpeditionSummary) {
+	summary.SiteCount = r.SiteCount
+	summary.QualityScore = r.QualityScore
+	summary.FollowUp = r.FollowUp
+}

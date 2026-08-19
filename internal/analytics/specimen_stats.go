@@ -93,3 +93,6 @@ func itoa(value int) string {
 	}
 	return string(digits)
 }
+func (s SpecimenStats) HasInventory() bool {
+	return s.Count > 0
+}

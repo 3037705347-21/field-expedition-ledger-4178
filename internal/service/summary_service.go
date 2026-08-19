@@ -31,21 +31,9 @@ func (s *SummaryService) Build(ctx context.Context, expeditionID string) (model.
 	if err != nil {
 		return model.ExpeditionSummary{}, err
 	}
-	summary := model.ExpeditionSummary{
-		ExpeditionID:      expedition.ID,
-		ExpeditionName:    expedition.Name,
-		Status:            string(expedition.Status),
-		ObservationCount:  len(observations),
-		SpecimenCount:     len(specimens),
-		MinimumElevationM: 0,
-		MaximumElevationM: 0,
-		AverageConfidence: 0,
-		RockTypes:         []string{},
-		SpecimenMaterials: []string{},
-		MaterialWeights:   map[string]float64{},
-		SpecimenStatuses:  []string{},
-		StatusCounts:      map[string]int{},
-	}
+	summary := model.NewExpeditionSummary(expedition)
+	summary.ObservationCount = len(observations)
+	summary.SpecimenCount = len(specimens)
 	expeditionStats := analytics.SummarizeExpeditions([]model.Expedition{expedition})
 	for _, status := range analytics.StatusNames() {
 		summary.StatusCounts[status] = expeditionStats.CountByStatus[status]
@@ -57,6 +45,11 @@ func (s *SummaryService) Build(ctx context.Context, expeditionID string) (model.
 	summary.SpecimenMaterials = specimenStats.Materials
 	summary.MaterialWeights = analytics.WeightByMaterial(specimens)
 	summary.SpecimenStatuses = analytics.StatusBreakdown(specimens)
+	review := analysis.BuildReview(observations, specimens)
+	if len(observations) == 0 && !specimenStats.HasInventory() {
+		return summary, nil
+	}
+	review.ApplyToSummary(&summary)
 	if len(observations) == 0 {
 		return summary, nil
 	}
@@ -67,12 +60,8 @@ func (s *SummaryService) Build(ctx context.Context, expeditionID string) (model.
 		summary.MaximumElevationM = maximum
 		summary.ElevationRange = policy.DescribeRange(minimum, maximum, "m")
 	}
-	review := analysis.BuildReview(observations, specimens)
 	summary.MinimumElevationM = derived.MinimumElevation
 	summary.MaximumElevationM = derived.MaximumElevation
 	summary.AverageConfidence = derived.AverageConfidence
-	summary.SiteCount = review.SiteCount
-	summary.QualityScore = review.QualityScore
-	summary.FollowUp = review.FollowUp
 	return summary, nil
 }

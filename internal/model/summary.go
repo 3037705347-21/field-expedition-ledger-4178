@@ -21,3 +21,16 @@ type ExpeditionSummary struct {
 	ActiveCount       int                `json:"active_count"`
 	ElevationRange    string             `json:"elevation_range"`
 }
+
+func NewExpeditionSummary(expedition Expedition) ExpeditionSummary {
+	return ExpeditionSummary{
+		ExpeditionID:      expedition.ID,
+		ExpeditionName:    expedition.Name,
+		Status:            string(expedition.Status),
+		RockTypes:         []string{},
+		SpecimenMaterials: []string{},
+		MaterialWeights:   map[string]float64{},
+		SpecimenStatuses:  []string{},
+		StatusCounts:      map[string]int{},
+	}
+}
