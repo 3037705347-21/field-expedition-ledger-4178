@@ -60,7 +60,7 @@ func WeightByMaterial(items []model.Specimen) map[string]float64 {
 	result := make(map[string]float64)
 	for _, item := range items {
 		key := strings.ToLower(strings.TrimSpace(item.Material))
-		result[key] += item.WeightGrams
+		result[key] = item.WeightGrams
 	}
 	return result
 }
