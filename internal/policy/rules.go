@@ -42,10 +42,16 @@ func Clean(value string) string {
 }
 
 func CleanList(values []string) []string {
-	result := make([]string, 0, len(values))
-	seen := make(map[string]struct{})
-	for _, value := range values {
-		clean := Clean(value)
+	if len(values) == 0 {
+		return values
+	}
+	// Reuse the caller's backing array while normalizing the list.
+	// This keeps allocations small for field-note imports.
+	result := values[:0]
+	seen := make(map[string]struct{}, len(values))
+	for index := range values {
+		raw := values[index]
+		clean := Clean(raw)
 		if clean == "" {
 			continue
 		}
@@ -55,6 +61,12 @@ func CleanList(values []string) []string {
 		}
 		seen[key] = struct{}{}
 		result = append(result, clean)
+	}
+	if len(result) == 0 {
+		return result
+	}
+	for index := range result {
+		result[index] = strings.TrimSpace(result[index])
 	}
 	return result
 }
