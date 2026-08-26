@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"time"
 
@@ -38,7 +39,7 @@ func (s *SpecimenService) Register(ctx context.Context, expeditionID, label, mat
 		Notes:        strings.TrimSpace(notes),
 	}.Normalized()
 	if err := item.Validate(); err != nil {
-		return model.Specimen{}, err
+		return model.Specimen{}, fmt.Errorf("register specimen: %w", err)
 	}
 	return s.repository.CreateSpecimen(ctx, item)
 }
