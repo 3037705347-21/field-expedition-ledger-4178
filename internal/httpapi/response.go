@@ -29,9 +29,6 @@ func writeError(w http.ResponseWriter, err error) {
 	case errors.Is(err, model.ErrInvalidState), errors.Is(err, model.ErrClosedExpedition):
 		status = http.StatusConflict
 		code = "invalid_state"
-	case errors.Is(err, model.ErrInactiveExpedition):
-		status = http.StatusConflict
-		code = "inactive_expedition"
 	case errors.Is(err, model.ErrInvalidInput):
 		status = http.StatusBadRequest
 		code = "invalid_input"

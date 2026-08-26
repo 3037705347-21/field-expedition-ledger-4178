@@ -47,7 +47,3 @@ func (e Expedition) CanActivate() bool {
 func (e Expedition) CanClose() bool {
 	return policy.TransitionAllowed(string(e.Status), string(ExpeditionClosed))
 }
-
-func (e Expedition) CanRecord() bool {
-	return e.Status == ExpeditionActive
-}
