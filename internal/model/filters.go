@@ -1,10 +1,6 @@
 package model
 
-import (
-	"strings"
-
-	"example.com/field-expedition-ledger/internal/policy"
-)
+import "strings"
 
 type ExpeditionFilter struct {
 	Status string
@@ -13,7 +9,7 @@ type ExpeditionFilter struct {
 }
 
 func (f ExpeditionFilter) Matches(expedition Expedition) bool {
-	if f.Status != "" && policy.CanonicalStatus(string(expedition.Status)) != policy.CanonicalStatus(f.Status) {
+	if f.Status != "" && string(expedition.Status) != f.Status {
 		return false
 	}
 	if f.Region != "" && !strings.EqualFold(strings.TrimSpace(expedition.Region), strings.TrimSpace(f.Region)) {

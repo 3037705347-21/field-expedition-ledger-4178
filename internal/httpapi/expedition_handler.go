@@ -70,28 +70,17 @@ func (h expeditionHandler) create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h expeditionHandler) list(w http.ResponseWriter, r *http.Request) {
-	status := queryValue(r, "status")
-	region := queryValue(r, "region")
-	search := queryValue(r, "q")
-	var (
-		items []model.Expedition
-		err   error
-	)
-	switch {
-	case search != "":
-		items, err = h.query.Search(r.Context(), search)
-	case status != "":
-		items, err = h.query.ByStatus(r.Context(), status)
-	case region != "":
-		items, err = h.query.ByRegion(r.Context(), region)
-	default:
-		page, pageErr := h.query.Page(r.Context(), model.ExpeditionFilter{}, 0, 50)
-		items, err = page.Items, pageErr
+	filter := model.ExpeditionFilter{
+		Status: queryValue(r, "status"),
+		Region: queryValue(r, "region"),
+		Search: queryValue(r, "q"),
 	}
+	page, err := h.query.Page(r.Context(), filter, 0, 50)
 	if err != nil {
 		writeError(w, err)
 		return
 	}
+	items := page.Items
 	if queryValue(r, "newest") == "true" {
 		items = service.SortByStartDate(items, true)
 	}
