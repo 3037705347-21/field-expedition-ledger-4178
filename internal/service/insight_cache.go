@@ -42,17 +42,12 @@ func (c *InsightCache) Invalidate(key string) {
 	if _, exists := c.items[key]; !exists {
 		return
 	}
-	c.remove(key)
-}
-
-func (c *InsightCache) remove(key string) {
 	delete(c.items, key)
 	for index, item := range c.order {
-		if item != key {
-			continue
+		if item == key {
+			c.order = append(c.order[:index], c.order[index+1:]...)
+			break
 		}
-		c.order = append(c.order[:index], c.order[index+1:]...)
-		return
 	}
 }
 

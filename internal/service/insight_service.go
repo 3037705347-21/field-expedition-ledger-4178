@@ -41,11 +41,7 @@ func NewInsightService(repository store.Repository) *InsightService {
 }
 
 func (s *InsightService) Invalidate(expeditionID string) {
-	normalizedID := strings.TrimSpace(expeditionID)
-	if normalizedID == "" {
-		return
-	}
-	s.cache.Invalidate(normalizedID)
+	s.cache.Invalidate(expeditionID)
 }
 
 func (s *InsightService) Build(ctx context.Context, expeditionID string) (ExpeditionInsight, error) {
