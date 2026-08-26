@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "name": "field-expedition-ledger",
+  "summary": "A local service for geological field expedition notes, observations, and specimen custody.",
+  "user_roles": ["Field lead", "Field observer", "Collection custodian"],
+  "entities": ["expedition", "observation", "specimen", "expedition-summary"],
+  "workflows": [
+    {
+      "id": "create-and-activate-expedition",
+      "name": "Create and activate an expedition",
+      "actor": "Field lead",
+      "entry": "POST /api/expeditions then POST /api/expeditions/{id}/activate",
+      "steps": ["Validate the expedition identity and date", "Store the planned record and transition it to active"],
+      "success": "The active expedition is returned with its identifier",
+      "failure": "Invalid input or an invalid state transition returns a typed error",
+      "verification": "Runtime API check creates and activates an expedition"
+    },
+    {
+      "id": "record-site-observation",
+      "name": "Record a site observation",
+      "actor": "Field observer",
+      "entry": "POST /api/expeditions/{id}/observations",
+      "steps": ["Validate coordinates, elevation, rock type, and confidence", "Store the observation under an active expedition"],
+      "success": "The created observation is returned with a stable identifier",
+      "failure": "Invalid measurements or a non-active expedition are rejected",
+      "verification": "Runtime API check records an observation and lists it"
+    },
+    {
+      "id": "register-specimen",
+      "name": "Register a specimen",
+      "actor": "Collection custodian",
+      "entry": "POST /api/expeditions/{id}/specimens",
+      "steps": ["Validate label, material, weight, and collection date", "Store the specimen with custody state"],
+      "success": "The registered specimen can be retrieved by identifier",
+      "failure": "Invalid weight or a closed expedition is rejected",
+      "verification": "Runtime API check registers and retrieves a specimen"
+    },
+    {
+      "id": "close-and-review-expedition",
+      "name": "Close and review an expedition",
+      "actor": "Field lead",
+      "entry": "POST /api/expeditions/{id}/close then GET /api/expeditions/{id}/summary",
+      "steps": ["Transition the active expedition to closed", "Aggregate observations, specimens, and elevation range"],
+      "success": "The closed expedition summary contains stable counts",
+      "failure": "A planned or already closed expedition cannot be closed",
+      "verification": "Runtime API check closes an expedition and reads its summary"
+    }
+  ],
+  "module_plan": [
+    {"package": "internal/model", "workflow_ids": ["create-and-activate-expedition", "record-site-observation", "register-specimen", "close-and-review-expedition"]},
+    {"package": "internal/store", "workflow_ids": ["create-and-activate-expedition", "record-site-observation", "register-specimen", "close-and-review-expedition"]},
+    {"package": "internal/service", "workflow_ids": ["create-and-activate-expedition", "record-site-observation", "register-specimen", "close-and-review-expedition"]},
+    {"package": "internal/httpapi", "workflow_ids": ["create-and-activate-expedition", "record-site-observation", "register-specimen", "close-and-review-expedition"]}
+  ],
+  "interfaces": [
+    {"name": "expedition HTTP API", "workflow_ids": ["create-and-activate-expedition", "close-and-review-expedition"]},
+    {"name": "observation HTTP API", "workflow_ids": ["record-site-observation"]},
+    {"name": "specimen HTTP API", "workflow_ids": ["register-specimen"]}
+  ]
+}
