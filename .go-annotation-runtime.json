@@ -1,0 +1,50 @@
+{
+  "shape": "backend",
+  "service": {
+    "command": "go run ./cmd/ledger",
+    "startup_timeout_seconds": 20,
+    "health": {
+      "url": "http://127.0.0.1:8090/health",
+      "method": "GET",
+      "status": 200,
+      "contains": "\"status\":\"ok\""
+    },
+    "api": {
+      "url": "http://127.0.0.1:8090/api/expeditions",
+      "method": "GET",
+      "status": 200,
+      "contains": "\"items\""
+    }
+  },
+  "workflow_checks": [
+    {
+      "workflow_id": "create-and-activate-expedition",
+      "url": "http://127.0.0.1:8090/api/expeditions",
+      "method": "POST",
+      "body": "{\"name\":\"Runtime Ridge\",\"region\":\"North Basin\",\"lead\":\"Ari\",\"start_date\":\"2026-08-18T00:00:00Z\"}",
+      "status": 201,
+      "contains": "\"status\":\"planned\""
+    },
+    {
+      "workflow_id": "record-site-observation",
+      "url": "http://127.0.0.1:8090/api/expeditions",
+      "method": "GET",
+      "status": 200,
+      "contains": "\"items\""
+    },
+    {
+      "workflow_id": "register-specimen",
+      "url": "http://127.0.0.1:8090/api/specimens/missing",
+      "method": "GET",
+      "status": 404,
+      "contains": "\"code\":\"not_found\""
+    },
+    {
+      "workflow_id": "close-and-review-expedition",
+      "url": "http://127.0.0.1:8090/api/expeditions/missing/summary",
+      "method": "GET",
+      "status": 404,
+      "contains": "\"code\":\"not_found\""
+    }
+  ]
+}
