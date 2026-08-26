@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Field Expedition Ledger</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <p class="eyebrow">FIELD NOTEBOOK / LOCAL SERVICE</p>
+      <h1>Field Expedition Ledger</h1>
+      <p class="lede">Keep a clear chain from a planned expedition to the observations and specimens it produces.</p>
+    </header>
+    <section class="toolbar">
+      <button id="refresh" type="button">Refresh expeditions</button>
+      <span id="status" role="status">Loading...</span>
+    </section>
+    <section id="cards" class="cards" aria-live="polite"></section>
+    <section class="panel">
+      <h2>New expedition</h2>
+      <form id="expedition-form">
+        <label>Name <input name="name" required placeholder="North Basin Traverse"></label>
+        <label>Region <input name="region" required placeholder="Basalt Shelf"></label>
+        <label>Lead <input name="lead" required placeholder="Field lead"></label>
+        <button type="submit">Create planned expedition</button>
+      </form>
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>
